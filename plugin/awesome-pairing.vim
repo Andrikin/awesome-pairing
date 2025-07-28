@@ -16,11 +16,11 @@ function! s:forbided_cmd() abort
 	return getcmdtype() =~ '[=?/]'
 endfunction
 
-function! s:get_char_before_cursor() abort
+function! s:get_char(pos) abort
 	let char = ''
-	let col = col('.')
+	let col = charcol('.')
 	if col > 1
-		let char = getline('.')[col - 2]
+		let char = getline('.')[col - a:pos]
 	else
 		let char = getline('.')[0]
 	endif
@@ -75,7 +75,7 @@ endfunction
 function! s:ins_pairing_char(c) abort
 	" Verify if we are in a comment line
 	let pair = ''
-	let bchar = s:get_char_before_cursor()
+	let bchar = s:get_char(2)
 	let line = getline('.')
 	if s:is_comment_line(line) && a:c =~ "['\"]" && bchar =~ '\w'
 		let pair = a:c
@@ -111,6 +111,19 @@ function! s:pair(c) abort
 	return cmd
 endfunction
 
+function! s:tabjump() abort
+    let match = ''
+	if len(getcmdtype())
+        let match = getcmdline()[getcmdpos() - 1]
+	elseif mode() =~ 'i'
+        let match = s:get_char(1)
+    endif
+    if match =~ "[\])}\"\'>`]"
+        return "\<right>"
+    endif
+    return "\<tab>"
+endfunction
+
 if !hasmapto('<plug>(AwesomePairing)', 'ci')
 
 	augroup awesomepairing
@@ -125,6 +138,8 @@ if !hasmapto('<plug>(AwesomePairing)', 'ci')
 	noremap! <expr> { <SID>pair('{')
 	noremap! <expr> " <SID>pair('"')
 	noremap! <expr> ' <SID>pair("'")
+
+	map! <expr> <tab> <SID>tabjump()
 
 endif
 
