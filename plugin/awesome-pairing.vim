@@ -11,6 +11,10 @@ let g:loaded_awesome_pairing = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+if &wildcharm != 9
+    set wildcharm=<tab>
+endif
+
 function! s:forbided_cmd() abort
 	" Don't pair char in those cmd modes
 	return getcmdtype() =~ '[=?/]'
