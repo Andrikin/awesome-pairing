@@ -11,7 +11,7 @@ let g:loaded_awesome_pairing = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-if &wildcharm != 9
+if &g:wildcharm != 9
     set wildcharm=<tab>
 endif
 
