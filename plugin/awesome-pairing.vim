@@ -137,11 +137,17 @@ if !hasmapto('<plug>(AwesomePairing)', 'ci')
 	autocmd awesomepairing FileType html noremap! <expr> < <SID>pair('<')
 	autocmd awesomepairing FileType javascript,html noremap! <expr> ` <SID>pair('`')
 
-	noremap! <expr> ( <SID>pair('(')
-	noremap! <expr> [ <SID>pair('[')
-	noremap! <expr> { <SID>pair('{')
-	noremap! <expr> " <SID>pair('"')
-	noremap! <expr> ' <SID>pair("'")
+    let chars = []
+
+    if exists('g:awesome_pairing_chars')
+        let chars = split(g:awesome_pairing_chars, '\zs')
+    else
+        let chars = ['(', '[', '{', '"', "'"]
+    endif
+
+    for c in chars
+        execute "noremap! <expr> " c " <SID>pair(" c ")"
+    endfor
 
 	map! <expr> <tab> <SID>tabjump()
 
