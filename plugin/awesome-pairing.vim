@@ -146,7 +146,7 @@ if !hasmapto('<plug>(AwesomePairing)', 'ci')
     endif
 
     for c in chars
-        execute "noremap! <expr> " c " <SID>pair(" c ")"
+        execute printf("noremap! <expr> ", c, " <SID>pair(", c, ")")
     endfor
 
 	map! <expr> <tab> <SID>tabjump()
