@@ -122,35 +122,26 @@ function! s:tabjump() abort
 	elseif mode() =~ 'i'
         let match = s:get_char(1)
     endif
-    if match =~ "[\])}\"\'>`]"
-        return "\<right>"
-    endif
+    let matches = split(g:awesome_pairing_chars, '\zs')
+    for m in matches
+        if match =~ m
+            return "\<right>"
+        endif
+    endfor
     return "\<tab>"
 endfunction
 
 if !hasmapto('<plug>(AwesomePairing)', 'ci')
-
-	augroup awesomepairing
-		autocmd!
-	augroup END
-
-	autocmd awesomepairing FileType html noremap! <expr> < <SID>pair('<')
-	autocmd awesomepairing FileType javascript,html noremap! <expr> ` <SID>pair('`')
-
     let chars = []
-
     if exists('g:awesome_pairing_chars')
         let chars = split(g:awesome_pairing_chars, '\zs')
     else
         let chars = ['(', '[', '{', '"', "'"]
     endif
-
     for c in chars
         execute printf('noremap! <expr> %s <SID>pair("%s")', c, escape(c, '"'))
     endfor
-
 	map! <expr> <tab> <SID>tabjump()
-
 endif
 
 let &cpo = s:save_cpo
