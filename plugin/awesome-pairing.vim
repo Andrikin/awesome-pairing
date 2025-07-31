@@ -124,7 +124,7 @@ function! s:tabjump() abort
     endif
     let matches = split(g:awesome_pairing_chars, '\zs')
     for m in matches
-        if match =~ m
+        if match == m
             return "\<right>"
         endif
     endfor
